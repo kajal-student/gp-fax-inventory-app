@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Grouped Stock Availability - GP Fax</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      padding: 20px;
+      background: #f4f8fb;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    table {
+      width: 90%;
+      border-collapse: collapse;
+      margin: 0 auto 40px auto;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+    }
+    .article-header {
+      background-color: #cce5ff;
+      font-weight: bold;
+    }
+    .color-header {
+      background-color: #e8f4ff;
+    }
+    #backBtn {
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 5px;
+      display: inline-block;
+      margin-bottom: 30px;
+    }
+    #backBtn:hover {
+      background-color: #218838;
+    }
+
+    /* Media Queries */
+    @media screen and (max-width: 768px) {
+      table {
+        font-size: 14px;
+      }
+      th, td {
+        padding: 8px 12px;
+      }
+      #backBtn {
+        font-size: 14px;
+        padding: 8px 16px;
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      table {
+        font-size: 12px;
+      }
+      th, td {
+        padding: 6px 10px;
+      }
+      #backBtn {
+        font-size: 12px;
+        padding: 6px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html" id="backBtn">← Back to Add Stock</a>
+  <h2>Grouped Stock Availability</h2>
+  <div id="stockList"></div>
+
+  <script>
+    async function loadStockList() {
+      const res = await fetch("http://localhost:3000/stock-list");
+      const stocks = await res.json();
+
+      let table = "<table><tr><th>Article</th><th>Color</th><th>Size</th><th>Gender</th><th>Quantity</th></tr>";
+
+      for (let article in stocks) {
+        for (let color in stocks[article]) {
+          table += `<tr class="article-header"><td colspan="5">${article}</td></tr>`;
+          for (let size in stocks[article][color].sizes) {
+            table += `<tr class="color-header">
+                        <td></td>
+                        <td>${color}</td>
+                        <td>${size}</td>
+                        <td>${stocks[article][color].gender}</td>
+                        <td>${stocks[article][color].sizes[size]}</td>
+                      </tr>`;
+          }
+        }
+      }
+      table += "</table>";
+      document.getElementById("stockList").innerHTML = table;
+    }
+
+    loadStockList();
+  </script>
+</body>
+</html>
