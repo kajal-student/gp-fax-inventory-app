@@ -6,12 +6,11 @@
   <title>GP Fax Inventory Form</title>
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
   <div class="container">
     <h1>👟 GP Fax Inventory Management</h1>
 
-    <form>
+    <form id="stockForm">
       <h2>📝 Add New Stock Item</h2>
       <label>Stock Type:</label>
       <select name="stockType" required>
@@ -77,20 +76,13 @@
   </div>
 
   <script>
-    document.querySelector("form").addEventListener("submit", async function (e) {
+    document.getElementById("stockForm").addEventListener("submit", async function (e) {
       e.preventDefault();
-      const formData = {
-        stockType: document.querySelector("select[name='stockType']").value,
-        material: document.querySelector("select[name='material']").value,
-        articleName: document.querySelector("input[name='articleName']").value,
-        color: document.querySelector("input[name='color']").value,
-        size: document.querySelector("input[name='size']").value,
-        gender: document.querySelector("select[name='gender']").value,
-        cartons: parseInt(document.querySelector("input[name='cartons']").value),
-        quantityPerCarton: parseInt(document.querySelector("input[name='quantityPerCarton']").value),
-        price: parseFloat(document.querySelector("input[name='price']").value),
-        sku: document.querySelector("input[name='sku']").value
-      };
+      const formData = Object.fromEntries(new FormData(this).entries());
+      formData.cartons = parseInt(formData.cartons);
+      formData.quantityPerCarton = parseInt(formData.quantityPerCarton);
+      formData.size = formData.size.toString();
+      formData.price = parseFloat(formData.price);
 
       try {
         const res = await fetch("http://localhost:3000/add-stock", {
@@ -100,8 +92,9 @@
         });
         const msg = await res.text();
         alert(msg);
+        this.reset();
       } catch (error) {
-        alert("Error adding stock");
+        alert("❌ Error adding stock");
       }
     });
 
@@ -116,7 +109,6 @@
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
-          URL.revokeObjectURL(link.href);
         })
         .catch(error => console.error("Error generating PDF:", error));
     });

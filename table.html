@@ -45,32 +45,13 @@
     #backBtn:hover {
       background-color: #218838;
     }
-
-    /* Media Queries */
     @media screen and (max-width: 768px) {
-      table {
-        font-size: 14px;
-      }
-      th, td {
-        padding: 8px 12px;
-      }
-      #backBtn {
-        font-size: 14px;
-        padding: 8px 16px;
-      }
+      table { font-size: 14px; }
+      th, td { padding: 8px 12px; }
     }
-
     @media screen and (max-width: 480px) {
-      table {
-        font-size: 12px;
-      }
-      th, td {
-        padding: 6px 10px;
-      }
-      #backBtn {
-        font-size: 12px;
-        padding: 6px 12px;
-      }
+      table { font-size: 12px; }
+      th, td { padding: 6px 10px; }
     }
   </style>
 </head>
@@ -85,10 +66,9 @@
       const stocks = await res.json();
 
       let table = "<table><tr><th>Article</th><th>Color</th><th>Size</th><th>Gender</th><th>Quantity</th></tr>";
-
       for (let article in stocks) {
+        table += `<tr class="article-header"><td colspan="5">${article}</td></tr>`;
         for (let color in stocks[article]) {
-          table += `<tr class="article-header"><td colspan="5">${article}</td></tr>`;
           for (let size in stocks[article][color].sizes) {
             table += `<tr class="color-header">
                         <td></td>
